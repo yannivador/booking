@@ -20,7 +20,7 @@ h1 {
     display: flex;
     background-color: #003580;
     list-style: none;
-    padding: 1.5em 0;
+    padding: 1em 0;
     color: white;
 }
 
@@ -42,10 +42,27 @@ h1 {
     border: 3px solid orange;
     font-size: 150%;
     border-radius: 5px;
-    background-color: antiquewhite;
+    background-color: white;
+    padding: 1% 0;
 }
 
 .slogan {
     font-size: 200%;
     padding: 2.5rem 0;
+    background-color: #003580;
+    margin-bottom: 15px;
+    color: white;
 }
+
+.container-admin {
+    display: flex;
+}
+
+.box-admin {
+    width: 48%;
+    background-color: bisque;
+    padding: 2%;
+    margin: 1%;
+    border: 1px dashed grey;
+}
+

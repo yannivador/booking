@@ -68,6 +68,7 @@
             $stmt->bindParam('id_hotel', $id_hotel);
             $stmt->execute();
             $errors = $stmt->errorInfo();
+            $chambre_occupee = [];
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $chambres_occupees[] = $row['id_cham'];
             }
@@ -245,25 +246,6 @@
             }
         }
 
-        public function cham_reserv(){
-            $requete = "SELECT id_hotel, numero FROM chambre AS C INNER JOIN booking AS B WHERE C.id = B.id_cham;";
-            $stmt = $this->_db->prepare($requete);
-            // $stmt->bindParam('table_name', $table_name);
-            $stmt->execute();
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                echo '<pre>';
-                print_r($row);
-                echo '</pre>';
-            }
-            
-            $errors = $stmt->errorInfo();
-            // if ($errors[0] != '00000') {
-            //     return $stmt->errorInfo();
-            // }
-            // else {
-            //     return $row['numero'];
-            // }
-        }
         
     }
  ?>
