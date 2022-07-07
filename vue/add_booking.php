@@ -8,10 +8,14 @@
 </head>
 
 <body>
+    <header class="main-header">
+        <div class="main-header-container">
+            <h1 class="centre">Pré-réservation</h1>
+            <?php require("../vue/nav.php"); ?>
+            <p class="slogan">Réserver une chambre en quelques clics </p>
+        </div>
+    </header>
     <div id="wrapper">
-        <h1 class="centre">Pré-réservation</h1>
-        <?php require("../vue/nav.php"); ?>
-        <p class="slogan">Réserver une chambre en quelques clics </p>
         <form action="add_booking.php" method="POST" name="form" class="formu">
             <fieldset>
                 <p class="clearfix">
@@ -49,8 +53,8 @@
 
                 <input type="hidden" id="date" name="date" value="14/06/2022" />
 
-                <p class="centre" id="envoyer">
-                    <input class="bt" type="submit" name="validation" value="Rechercher">
+                <p class="clearfix" id="envoyer">
+                    <input class="bt-rechercher" type="submit" name="validation" value="Rechercher">
                 </p>
             </fieldset>
         </form>
@@ -101,7 +105,9 @@
 
             </div>
         </div>
+        <?php require("../vue/galerie.php") ?>
     </div>
+    <?php require("../vue/footer.php") ?>
 </body>
 
 </html>
