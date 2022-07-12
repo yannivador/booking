@@ -121,7 +121,7 @@
                 return $stmt->errorInfo();
             }
             else {
-                return "Insertion booking effectuée avec succès";
+                return "Votre réservation est confirmé.";
             }
         }
 

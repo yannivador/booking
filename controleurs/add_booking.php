@@ -23,7 +23,7 @@
 		$numero_chambre = $Dbm->attributChambre($_POST['hotel'], $_POST['debut'], $_POST['fin']);
 		// Vérification si l'hotel est complet
 		if ($numero_chambre == false) {
-			print("L'hotel est complet");
+			header("Location: add_booking.php?msg=L'hotel est complet");
 			exit();
 		}
 
@@ -59,15 +59,16 @@
 		// Création objet booking
 		$booking_obj = new Booking($tab_booking);
 		// Insertion de la réservation dans la table booking
-		print($Dbm->insertBooking(
+		$msg = $Dbm->insertBooking(
 			$booking_obj->getDebut(), 
 			$booking_obj->getFin(), 
 			$booking_obj->getDate(), 
 			$booking_obj->getIdPers(), 
 			$booking_obj->getIdCham(),
 			$booking_obj->getIdHotel()
-		));
-		
+		);
+
+		header("Location: add_booking.php?msg=" . $msg);
     }
 
     require('../vue/add_booking.php')

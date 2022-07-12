@@ -2,10 +2,11 @@
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+    list-style: none;
 }
 
 body {
-    background-color: azure;
+    background-color: white;
     font-size: 100%;
     font-family: Arial, Helvetica, sans-serif;
 }
@@ -65,7 +66,6 @@ body {
 }
 
 
-
 .box-admin {
     width: 48%;
     background-color: bisque;
@@ -74,17 +74,30 @@ body {
     border: 1px dashed grey;
 }
 
+.msg {
+    display: flex;
+    justify-content: space-between;
+    padding: 1%;
+    background-color: green;
+    color: white;
+}
+
 /* admin  */
 
 .container-admin {
     display: flex;
 }
 
+table, th, td {
+    text-align: center;
+  }
+
 
 /* Formulaire  */
 
 .formu fieldset {
     display: flex;
+    justify-content: space-between;
     border: 3px solid orange;
     font-size: 150%;
     border-radius: 5px;
@@ -94,9 +107,10 @@ body {
     margin-top: 15px;
 }
 
-input,
-select {
+.formu input,
+.formu select {
     padding: 1%;
+    height: 70%;
 }
 
 .clearfix {
@@ -105,11 +119,10 @@ select {
 }
 
 .bt-rechercher {
-    height: 100%;
-    width: 100%;
+    height: 70%;
+    /* width: 100%; */
     /* padding: 1% 5%; */
     background-color: #003580;
-    /* Green */
     border: none;
     color: white;
     padding: 15px 32px;
