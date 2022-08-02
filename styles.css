@@ -99,7 +99,7 @@ table, th, td {
     display: flex;
     justify-content: space-between;
     border: 3px solid orange;
-    font-size: 150%;
+    font-size: 180%;
     border-radius: 5px;
     background-color: white;
     padding: 1%;
@@ -135,14 +135,50 @@ table, th, td {
 
 .galerie {
     display: flex;
+    justify-content: space-between;
     padding: 1%;
+    margin: 15px 0;
 }
 
 .galerie-item {
-    border: 1px solid black;
-    width: 33%;
+    /* border: 1px solid black; */
+    width: 32%;
     height: 250px;
+}
+
+/*  Hotel container  */
+
+.hotel-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /* border: 1px solid red; */
+    margin-top: 20px;
+}
+
+.hotel {
+    display: flex;
+    /* border: 1px solid black; */
     margin-bottom: 15px;
+    background-color:aliceblue;
+}
+
+.hotel div {
+    width: 100%;
+    padding: 3%;
+    /* border: 1px solid black; */
+}
+
+.hotel div p {
+    font-family: Helvetica, sans-serif;
+    color:darkslategrey;
+    font-size: 120%;
+    padding: 1%; 
+}
+
+.hotel img {
+    width: 30%;
+    height: 100%;
 }
 
 /* Footer  */
@@ -159,7 +195,7 @@ table, th, td {
 
 .bloc-footer {
     width: 24%;
-    padding: 1%;
+    padding: 1% 1% 0 0 ;
     color: darkcyan;
 }
 
@@ -170,5 +206,5 @@ table, th, td {
 .copyright {
     text-align: center;
     font-weight: bold;
-    margin: 20px;
+    padding: 20px;
 }

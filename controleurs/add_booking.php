@@ -9,67 +9,74 @@
 	$conn =  new Db();
 	$dbh = $conn->connection();
 	$Dbm = new DbManager($dbh);
-	$hotels = $Dbm->readHotel();
+	$hotels = $Dbm->readHotels();
 
     if (isset($_POST['validation'])) {
-        // echo '<pre>';
-        // print_r($_POST);
-        // echo '</pre>';
+        echo '<pre>';
+        print_r($_POST);
+        echo '</pre>';
 
-		// ------- attribution id_chamb -------
-
-		// Attribution d'une chambre
-		// $numero_chambre = $Dbm->attributChambre($_POST['hotel']);
-		$numero_chambre = $Dbm->attributChambre($_POST['hotel'], $_POST['debut'], $_POST['fin']);
-		// Vérification si l'hotel est complet
-		if ($numero_chambre == false) {
-			header("Location: add_booking.php?msg=L'hotel est complet");
-			exit();
+		// Vérifications des dates
+		if ($_POST['debut'] >= $_POST['fin']) {
+			header("Location: add_booking.php?msg=Veuillez choisir un intervalle de date valide");
 		}
+		else {
+			// ------- 1. Attribution d'une chambre -------
 
-		// ------- attribution id_pers -------
-		// Structure du tableau pour création d'objet
-		$tab2 = [
-			'index' => '', 
-			'name' => $_POST['nom'], 
-			'email' => $_POST['email']
-		];
+			$numero_chambre = $Dbm->attributChambre($_POST['hotel'], $_POST['debut'], $_POST['fin']);
+			// Vérification si l'hotel est complet
+			if ($numero_chambre == false) {
+				header("Location: add_booking.php?msg=L'hotel est complet");
+				exit();
+			}
 
-		$personne = new Personne($tab2); // Création objet personne
+			// ------- 2. Ajout d'une personne dans la base -------
+			// Structure du tableau pour création de l'objet "Personne"
+			$tab2 = [
+				'index' => '', 
+				'name' => $_POST['nom'], 
+				'email' => $_POST['email']
+			];
 
-		// Insertion dans BDD
-		// La fonction renvoi l'id de la derniere insertion pour insertion dans la table booking
-		$lastIdPers = $Dbm->insertPersonne($personne->getName(), $personne->getEmail());
+			$personne = new Personne($tab2); // Création objet personne
 
-		// ------- Création Booking  -------
+			// Insertion dans BDD
+			$lastIdPers = $Dbm->insertPersonne($personne->getName(), $personne->getEmail());
 
-		//Structure du tableau pour création d'objet
-		$tab_booking = [
-			'index' => '', 
-			'debut' => $_POST['debut'], 
-			'fin' => $_POST['fin'],
-			'date' => $_POST['date'],
-			'id_pers' => $lastIdPers,
-			'id_cham' => $Dbm->idBynum_chamAndid_hotel($numero_chambre, 1),
-			'id_hotel' => $_POST['hotel']
-		];
+			// ------- 3. Création Booking  -------
 
+			//Structure du tableau pour création de l'objet booking
+			$tab_booking = [
+				'index' => '', 
+				'debut' => $_POST['debut'], 
+				'fin' => $_POST['fin'],
+				'date' => $_POST['date'],
+				'id_pers' => $lastIdPers,
+				'id_cham' => $Dbm->readIdBynum_chamAndid_hotel($numero_chambre, 1), 
+				'id_hotel' => $_POST['hotel']
+			];
+
+			// Création objet booking
+			$booking_obj = new Booking($tab_booking);
 		
 
-		// Création objet booking
-		$booking_obj = new Booking($tab_booking);
-		// Insertion de la réservation dans la table booking
-		$msg = $Dbm->insertBooking(
-			$booking_obj->getDebut(), 
-			$booking_obj->getFin(), 
-			$booking_obj->getDate(), 
-			$booking_obj->getIdPers(), 
-			$booking_obj->getIdCham(),
-			$booking_obj->getIdHotel()
-		);
+			// Insertion de la réservation dans la table booking
+			$msg = $Dbm->insertBooking(
+				$booking_obj->getDebut(), 
+				$booking_obj->getFin(), 
+				$booking_obj->getDate(), 
+				$booking_obj->getIdPers(), 
+				$booking_obj->getIdCham(),
+				$booking_obj->getIdHotel()
+			);
 
-		header("Location: add_booking.php?msg=" . $msg);
+			if ($msg == 1) {
+				header("Location: add_booking.php?msg=Votre réservation est confirmé !");
+			}
+			else {
+				header("Location: add_booking.php?msg=erreur lors de la réservation..");
+			}
+		}
     }
 
-    require('../vue/add_booking.php')
-?>
+    require('../vue/add_booking.php');

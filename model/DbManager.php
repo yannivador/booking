@@ -17,7 +17,10 @@
         }
 
         // CRUD
-        public function readHotel() {
+
+        /// ***** READ *****
+
+        public function readHotels() {
             $stmt = $this->_db->prepare('SELECT * FROM hotel'); // requete
             $stmt->execute();
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -105,6 +108,77 @@
             }
         }
 
+        public function readNameByid($id) {
+            $requete = "SELECT nom FROM personne WHERE id = :id";
+            $stmt = $this->_db->prepare($requete);
+            // $stmt->bindParam('table_name', $table_name);
+            $stmt->bindParam('id', $id);
+            $stmt->execute();
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            $errors = $stmt->errorInfo();
+            if ($errors[0] != '00000') {
+                return $stmt->errorInfo();
+            }
+            else {
+                return $row['nom'];
+            }
+        }
+
+        public function readNum_chamByid($id) {
+            $requete = "SELECT numero FROM chambre WHERE id = :id";
+            $stmt = $this->_db->prepare($requete);
+            // $stmt->bindParam('table_name', $table_name);
+            $stmt->bindParam('id', $id);
+            $stmt->execute();
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            $errors = $stmt->errorInfo();
+            if ($errors[0] != '00000') {
+                return $stmt->errorInfo();
+            }
+            else {
+                return $row['numero'];
+            }
+        }
+
+        public function readIdBynum_chamAndid_hotel($numero, $id_hotel) {
+            $requete = 'SELECT id FROM chambre WHERE numero = :numero AND id_hotel = :id_hotel';
+            $stmt = $this->_db->prepare($requete);
+            // $stmt->bindParam('table_name', $table_name);
+            $stmt->bindParam('numero', $numero);
+            $stmt->bindParam('id_hotel', $id_hotel);
+            $stmt->execute();
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            $errors = $stmt->errorInfo();
+            if ($errors[0] != '00000') {
+                return $stmt->errorInfo();
+            }
+            else {
+                return $row['id'];
+            }
+        }
+
+        public function readHotelByid($id) {
+            $requete = "SELECT name FROM `hotel` WHERE id = :id";
+            $stmt = $this->_db->prepare($requete);
+            // $stmt->bindParam('table_name', $table_name);
+            $stmt->bindParam('id', $id);
+            $stmt->execute();
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            $errors = $stmt->errorInfo();
+            if ($errors[0] != '00000') {
+                return $stmt->errorInfo();
+            }
+            else {
+                return $row['name'];
+            }
+        }
+
+        /// ***** INSERT *****
+
         public function insertBooking($debut, $fin, $date, $id_pers, $id_cham, $id_hotel) {
             $requete = "INSERT INTO `booking` (`id`, `debut`, `fin`, `date`, `id_pers`, `id_cham`, `id_hotel`) VALUES (NULL, :debut, :fin, :date, :id_pers, :id_cham, :id_hotel);";
             $stmt = $this->_db->prepare($requete);
@@ -121,12 +195,9 @@
                 return $stmt->errorInfo();
             }
             else {
-                return "Votre réservation est confirmé.";
+                return 1;
             }
         }
-
-        // insertBooking
-        // 
 
         public function insertPersonne($nom, $email) {
             $requete = "INSERT INTO `personne` (`id`, `nom`, `email`) VALUES (NULL, :nom, :email);";
@@ -150,18 +221,10 @@
             $list_cham_hotel = $this->readChambreByHotel($id_hotel); // Liste des chambres dans un hotel
             $id_cham_hotel_occupees = $this->readChambresOccupees($debut, $fin, $id_hotel); // liste des id de chambres d'un hotel
             foreach ($id_cham_hotel_occupees as $id_cham) {
-                $list_cham_occupees[] = $this->num_chamByid($id_cham); // conversion id en numéro de chmabre
+                $list_cham_occupees[] = $this->readNum_chamByid($id_cham); // conversion id en numéro de chambre
             }
             
-            echo '<p>Liste des chambres : </p>';
-            foreach ($list_cham_hotel as $chambre) {
-                echo ' - ' . $chambre;
-            }
-            echo '<p>Liste des chambres occupées entre le ' .$debut.  ' et le ' .$fin. ' : </p>';
-            foreach ($list_cham_occupees as $chambre_occupee) {
-                echo ' - ' . $chambre_occupee;
-            }
-            echo '<br>';
+            // Si le nombre de chambres occupées est égal au nombre de chambre totales de l'hotel
             if (count($list_cham_hotel) == count($list_cham_occupees)) {
                 return 0;
             }
@@ -176,75 +239,7 @@
             }
         }
 
-
-        public function nameByid($id) {
-            $requete = "SELECT nom FROM personne WHERE id = :id";
-            $stmt = $this->_db->prepare($requete);
-            // $stmt->bindParam('table_name', $table_name);
-            $stmt->bindParam('id', $id);
-            $stmt->execute();
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            
-            $errors = $stmt->errorInfo();
-            if ($errors[0] != '00000') {
-                return $stmt->errorInfo();
-            }
-            else {
-                return $row['nom'];
-            }
-        }
-
-        public function num_chamByid($id) {
-            $requete = "SELECT numero FROM chambre WHERE id = :id";
-            $stmt = $this->_db->prepare($requete);
-            // $stmt->bindParam('table_name', $table_name);
-            $stmt->bindParam('id', $id);
-            $stmt->execute();
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            
-            $errors = $stmt->errorInfo();
-            if ($errors[0] != '00000') {
-                return $stmt->errorInfo();
-            }
-            else {
-                return $row['numero'];
-            }
-        }
-
-        public function idBynum_chamAndid_hotel($numero, $id_hotel) {
-            $requete = 'SELECT id FROM chambre WHERE numero = :numero AND id_hotel = :id_hotel';
-            $stmt = $this->_db->prepare($requete);
-            // $stmt->bindParam('table_name', $table_name);
-            $stmt->bindParam('numero', $numero);
-            $stmt->bindParam('id_hotel', $id_hotel);
-            $stmt->execute();
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            
-            $errors = $stmt->errorInfo();
-            if ($errors[0] != '00000') {
-                return $stmt->errorInfo();
-            }
-            else {
-                return $row['id'];
-            }
-        }
-
-        public function hotelByid($id) {
-            $requete = "SELECT name FROM `hotel` WHERE id = :id";
-            $stmt = $this->_db->prepare($requete);
-            // $stmt->bindParam('table_name', $table_name);
-            $stmt->bindParam('id', $id);
-            $stmt->execute();
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            
-            $errors = $stmt->errorInfo();
-            if ($errors[0] != '00000') {
-                return $stmt->errorInfo();
-            }
-            else {
-                return $row['name'];
-            }
-        }
+        
 
         
     }
